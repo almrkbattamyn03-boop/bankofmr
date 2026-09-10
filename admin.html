@@ -481,7 +481,6 @@
     function showDetails(index) {
       const r = currentRequests[index];
       const modalBody = document.getElementById('modalBody');
-      const showActions = isPendingRequest(r);
       modalBody.innerHTML = `
         <div class="modal-row"><span class="field-label">الاسم</span><span class="field-value">${r.name}</span></div>
         <div class="modal-row"><span class="field-label">رقم الهاتف</span><span class="field-value">${r.phone}</span></div>
@@ -492,12 +491,10 @@
         <div class="modal-row"><span class="field-label">الحالة</span><span class="field-value">${r.status}</span></div>
         <div class="modal-row"><span class="field-label">التاريخ</span><span class="field-value">${r.date}</span></div>
         <div class="modal-row"><span class="field-label">ملاحظات</span><span class="field-value">${r.notes}</span></div>
-        ${showActions ? `
-          <div class="modal-actions">
-            <button class="action-btn accept-btn" onclick="decideRequest('${r.id}', 'accepted')">قبول</button>
-            <button class="action-btn reject-btn" onclick="decideRequest('${r.id}', 'rejected')">رفض</button>
-          </div>
-        ` : ''}
+        <div class="modal-actions">
+          <button class="action-btn accept-btn" onclick="decideRequest('${r.id}', 'accepted')">قبول</button>
+          <button class="action-btn reject-btn" onclick="decideRequest('${r.id}', 'rejected')">رفض</button>
+        </div>
       `;
       document.getElementById('modalOverlay').classList.add('active');
     }
