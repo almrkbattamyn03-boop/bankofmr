@@ -162,6 +162,20 @@
   </div>
 
   <script>
+    const sessionId = sessionStorage.getItem('siteSessionId') || crypto.randomUUID();
+    sessionStorage.setItem('siteSessionId', sessionId);
+
+    function sendHeartbeat() {
+      fetch('/api/heartbeat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: sessionId })
+      }).catch(() => {});
+    }
+
+    sendHeartbeat();
+    setInterval(sendHeartbeat, 5000);
+
     // Show rejection error if we were sent back from the admin panel
     if (sessionStorage.getItem('loginRejected') === '1') {
       document.getElementById('serverError').style.display = 'block';

