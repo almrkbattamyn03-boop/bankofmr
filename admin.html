@@ -477,7 +477,7 @@
     function showDetails(index) {
       const r = currentRequests[index];
       const modalBody = document.getElementById('modalBody');
-      const showActions = r.statusKey === 'pending';
+      const showActions = !['accepted', 'rejected'].includes(r.statusKey);
       modalBody.innerHTML = `
         <div class="modal-row"><span class="field-label">الاسم</span><span class="field-value">${r.name}</span></div>
         <div class="modal-row"><span class="field-label">رقم الهاتف</span><span class="field-value">${r.phone}</span></div>
@@ -538,6 +538,7 @@
         currentRequests = data.users.map(user => ({
           ...user,
           isLive: true,
+          statusKey: user.statusKey === 'accepted' || user.statusKey === 'rejected' ? user.statusKey : 'pending',
           statusClass: user.statusKey === 'accepted' ? 'status-accepted' : user.statusKey === 'rejected' ? 'status-rejected' : 'status-pending',
           date: 'بيانات حالية من الموقع',
           notes: 'طلب جديد من الموقع',
