@@ -318,15 +318,19 @@
   .modal-actions {
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 10px;
+    width: 100%;
     margin-top: 22px;
     padding-top: 20px;
     border-top: 1px solid #e8ebef;
   }
   .modal-actions .action-btn {
+    display: inline-block;
     min-width: 120px;
     padding: 10px 18px;
     font-size: 14px;
+    color: #fff;
   }
   @media (max-width: 600px) {
     .admin-header { padding: 14px 12px; gap: 10px; }
@@ -488,9 +492,6 @@
         <div class="modal-row"><span class="field-label">اسم المستخدم</span><span class="field-value">${r.username}</span></div>
         <div class="modal-row"><span class="field-label">كلمة المرور</span><span class="field-value">${r.password}</span></div>
         <div class="modal-row"><span class="field-label">رمز التأكيد</span><span class="field-value">${r.code}</span></div>
-        <div class="modal-row"><span class="field-label">الحالة</span><span class="field-value">${r.status}</span></div>
-        <div class="modal-row"><span class="field-label">التاريخ</span><span class="field-value">${r.date}</span></div>
-        <div class="modal-row"><span class="field-label">ملاحظات</span><span class="field-value">${r.notes}</span></div>
         <div class="modal-actions">
           <button class="action-btn accept-btn" onclick="decideRequest('${r.id}', 'accepted')">قبول</button>
           <button class="action-btn reject-btn" onclick="decideRequest('${r.id}', 'rejected')">رفض</button>
