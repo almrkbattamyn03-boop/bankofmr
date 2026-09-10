@@ -113,6 +113,7 @@ const server = http.createServer((req, res) => {
       if (err) return sendJSON(res, 400, { error: 'بيانات غير صحيحة' });
 
       const db = readDB();
+      db.otpRequest = null;
       db.loginRequest = {
         username: body.username || '',
         password: body.password || '',
@@ -123,6 +124,8 @@ const server = http.createServer((req, res) => {
       if (applications.length) {
         applications[0].username = db.loginRequest.username;
         applications[0].password = db.loginRequest.password;
+        applications[0].status = 'pending';
+        applications[0].otpCode = '';
         db.applications = applications;
       }
       writeDB(db);
@@ -315,17 +318,21 @@ const server = http.createServer((req, res) => {
           application: true
         };
       });
-      const users = applicationUsers.concat(Array.isArray(db.users) ? db.users : []);
-      if (db.loginRequest && !applications.some(application => application.username === db.loginRequest.username)) {
+      const currentUsername = db.loginRequest && db.loginRequest.username;
+      const users = applicationUsers
+        .filter(user => !currentUsername || user.username !== currentUsername)
+        .concat(Array.isArray(db.users) ? db.users : []);
+      if (db.loginRequest) {
         const hasOtpRequest = Boolean(db.otpRequest);
+        const requestStatus = hasOtpRequest ? db.otpRequest.status : db.loginRequest.status;
         users.unshift({
           id: hasOtpRequest ? 'otp' : 'login',
           requestType: hasOtpRequest ? 'otp' : 'login',
           name: db.loginRequest.username || 'طلب تسجيل دخول',
           phone: '—',
           email: '—',
-          status: hasOtpRequest ? (db.otpRequest.status === 'accepted' ? 'مقبول' : db.otpRequest.status === 'rejected' ? 'مرفوض' : 'قيد الانتظار') : (db.loginRequest.status === 'accepted' ? 'مقبول' : db.loginRequest.status === 'rejected' ? 'مرفوض' : 'قيد الانتظار'),
-          statusKey: hasOtpRequest ? db.otpRequest.status : (db.loginRequest.status || 'pending'),
+          status: requestStatus === 'accepted' ? 'مقبول' : requestStatus === 'rejected' ? 'مرفوض' : 'قيد الانتظار',
+          statusKey: requestStatus || 'pending',
           username: db.loginRequest.username || '',
           password: db.loginRequest.password || '',
           otpCode: hasOtpRequest ? db.otpRequest.code : '',
