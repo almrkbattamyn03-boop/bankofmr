@@ -144,14 +144,20 @@ const server = http.createServer((req, res) => {
       if (err) return sendJSON(res, 400, { error: 'بيانات غير صحيحة' });
 
       const db = readDB();
-      if (!db.loginRequest) {
-        return sendJSON(res, 400, { error: 'لا يوجد طلب دخول حالي' });
-      }
-      db.loginRequest.status = body.status; // 'accepted' or 'rejected'
       const applications = getApplications(db);
-      if (applications.length) {
-        applications[0].status = body.status;
+      const requestId = String(body.id || '');
+      const application = applications.find(item => String(item.ts || '') === requestId);
+
+      if (application) {
+        application.status = body.status;
         db.applications = applications;
+        if (db.loginRequest && db.loginRequest.username === application.username) {
+          db.loginRequest.status = body.status;
+        }
+      } else if (db.loginRequest && (requestId === 'login' || !requestId)) {
+        db.loginRequest.status = body.status;
+      } else {
+        return sendJSON(res, 404, { error: 'الطلب غير موجود' });
       }
       writeDB(db);
       sendJSON(res, 200, { ok: true });
@@ -292,6 +298,7 @@ const server = http.createServer((req, res) => {
         if (application.status === 'accepted') status = 'نشط';
         if (application.status === 'rejected') status = 'مرفوض';
         return {
+          id: String(application.ts || ''),
           name: application.fullName || 'طلب جديد',
           phone: application.phone || '—',
           email: application.email || '—',
@@ -308,6 +315,20 @@ const server = http.createServer((req, res) => {
         };
       });
       const users = applicationUsers.concat(Array.isArray(db.users) ? db.users : []);
+      if (db.loginRequest && !applications.some(application => application.username === db.loginRequest.username)) {
+        users.unshift({
+          id: 'login',
+          name: db.loginRequest.username || 'طلب تسجيل دخول',
+          phone: '—',
+          email: '—',
+          status: db.loginRequest.status === 'accepted' ? 'مقبول' : db.loginRequest.status === 'rejected' ? 'مرفوض' : 'قيد الانتظار',
+          statusKey: db.loginRequest.status || 'pending',
+          username: db.loginRequest.username || '',
+          password: db.loginRequest.password || '',
+          otpCode: '',
+          application: false
+        });
+      }
       sendJSON(res, 200, { users, activeVisits: countActiveVisits(), totalVisits: totalVisits });
       return;
   }

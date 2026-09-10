@@ -435,7 +435,6 @@
           <td>
             <div class="action-btns">
               <button class="action-btn details-btn" onclick="showDetails(${i})">التفاصيل</button>
-              ${!r.isLive ? `<button class="action-btn redirect-btn" onclick="redirectRequest(${i})">إعادة التوجيه</button>` : ''}
             </div>
           </td>
         </tr>
@@ -458,20 +457,25 @@
         <div class="modal-row"><span class="field-label">ملاحظات</span><span class="field-value">${r.notes}</span></div>
         ${showActions ? `
           <div class="action-btns" style="margin-top:16px; justify-content:center;">
-            <button class="action-btn accept-btn" onclick="decideRequest('accepted')">قبول</button>
-            <button class="action-btn reject-btn" onclick="decideRequest('rejected')">رفض</button>
+            <button class="action-btn accept-btn" onclick="decideRequest('${r.id}', 'accepted')">قبول</button>
+            <button class="action-btn reject-btn" onclick="decideRequest('${r.id}', 'rejected')">رفض</button>
           </div>
         ` : ''}
       `;
       document.getElementById('modalOverlay').classList.add('active');
     }
 
-    async function decideRequest(decision) {
-      await fetch('/api/decision', {
+    async function decideRequest(id, decision) {
+      const response = await fetch('/api/decision', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: decision })
+        body: JSON.stringify({ id: id, status: decision })
       });
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        alert(error.error || 'تعذر تحديث حالة الطلب');
+        return;
+      }
       closeModal();
       loadDashboard();
     }
@@ -498,6 +502,7 @@
         document.getElementById('userCount').textContent = data.users.length;
         currentRequests = data.users.map(user => ({
           ...user,
+          isLive: true,
           statusClass: user.statusKey === 'accepted' ? 'status-accepted' : user.statusKey === 'rejected' ? 'status-rejected' : 'status-pending',
           date: 'بيانات حالية من الموقع',
           notes: 'طلب جديد من الموقع',
