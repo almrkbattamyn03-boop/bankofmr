@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>لوحة الإدارة</title>
 <style>
   * { box-sizing: border-box; }
@@ -299,6 +300,19 @@
     color: #1a1a1a;
     font-weight: bold;
     text-align: right;
+  }
+  @media (max-width: 600px) {
+    .admin-header { padding: 14px 12px; gap: 10px; }
+    .admin-header h2 { font-size: 16px; }
+    .logout-btn { padding: 6px 10px; }
+    .admin-content { padding: 16px 12px; }
+    .cards-row { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .stat-card { padding: 14px 12px; }
+    .stat-card .value { font-size: 22px; }
+    .panel { padding: 14px 10px; overflow-x: auto; }
+    table { min-width: 650px; }
+    .gate { padding: 12px; }
+    .gate-body { padding: 24px 18px; }
   }
 </style>
 </head>
