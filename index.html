@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Login</title>
 <style>
-  :root { --logo-background: #ffffff; }
+  :root {
+    --logo-background: #ffffff;
+    --card-background: #f8f8f8;
+  }
   * { box-sizing: border-box; }
   body {
     margin: 0;
@@ -28,9 +31,9 @@
     margin: 0 auto 22px;
   }
   .card {
-    max-width: 400px;
+    max-width: 430px;
     margin: 0 auto;
-    background: var(--logo-background);
+    background: var(--card-background);
     border-radius: 16px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.08);
     overflow: hidden;
@@ -41,7 +44,7 @@
     background: linear-gradient(to right, #c8102e 0%, #c8102e 50%, #0a2f6b 50%, #0a2f6b 100%);
   }
   .card-body {
-    padding: 22px 22px 26px;
+    padding: 26px 26px 32px;
   }
   label {
     display: block;
@@ -131,8 +134,8 @@
   @media (max-width: 600px) {
     body { padding: 260px 12px 20px; }
     .heading { font-size: 24px; margin-bottom: 30px; }
-    .card { max-width: 340px; }
-    .card-body { padding: 20px 16px 22px; }
+    .card { max-width: 365px; }
+    .card-body { padding: 24px 20px 28px; }
     .links-row a { display: inline-block; margin: 0 3px 8px; }
   }
 </style>
