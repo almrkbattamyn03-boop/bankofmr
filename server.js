@@ -7,11 +7,11 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
 const DB_FILE = path.join(__dirname, 'db.json');
 
 // ---------- تتبع الزيارات النشطة الحقيقية ----------
-// كل صفحة مفتوحة (login.html) بتبعت "نبضة" (heartbeat) كل شوية ثواني.
+// كل صفحة مفتوحة (index.html) بتبعت "نبضة" (heartbeat) كل شوية ثواني.
 // أي جلسة معملتش نبضة من فترة (HEARTBEAT_TIMEOUT) بتتحسب مش نشطة.
 const activeSessions = {}; // sessionId -> آخر وقت نبضة
 const HEARTBEAT_TIMEOUT_MS = 10000; // 10 ثواني

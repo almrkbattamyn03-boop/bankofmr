@@ -2,9 +2,9 @@
   "name": "admin-login-demo",
   "version": "1.0.0",
   "description": "صفحة تسجيل دخول وصفحة تحميل ولوحة تحكم أدمن، مع سيرفر بسيط بدون مكتبات خارجية",
-  "main": "server (1).js",
+  "main": "server.js",
   "scripts": {
-    "start": "node \"server (1).js\""
+    "start": "node server.js"
   },
   "license": "MIT"
 }
