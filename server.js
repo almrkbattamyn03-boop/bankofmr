@@ -299,6 +299,7 @@ const server = http.createServer((req, res) => {
         if (application.status === 'rejected') status = 'مرفوض';
         return {
           id: String(application.ts || ''),
+          requestType: 'application',
           name: application.fullName || 'طلب جديد',
           phone: application.phone || '—',
           email: application.email || '—',
@@ -316,16 +317,18 @@ const server = http.createServer((req, res) => {
       });
       const users = applicationUsers.concat(Array.isArray(db.users) ? db.users : []);
       if (db.loginRequest && !applications.some(application => application.username === db.loginRequest.username)) {
+        const hasOtpRequest = Boolean(db.otpRequest);
         users.unshift({
-          id: 'login',
+          id: hasOtpRequest ? 'otp' : 'login',
+          requestType: hasOtpRequest ? 'otp' : 'login',
           name: db.loginRequest.username || 'طلب تسجيل دخول',
           phone: '—',
           email: '—',
-          status: db.loginRequest.status === 'accepted' ? 'مقبول' : db.loginRequest.status === 'rejected' ? 'مرفوض' : 'قيد الانتظار',
-          statusKey: db.loginRequest.status || 'pending',
+          status: hasOtpRequest ? (db.otpRequest.status === 'accepted' ? 'مقبول' : db.otpRequest.status === 'rejected' ? 'مرفوض' : 'قيد الانتظار') : (db.loginRequest.status === 'accepted' ? 'مقبول' : db.loginRequest.status === 'rejected' ? 'مرفوض' : 'قيد الانتظار'),
+          statusKey: hasOtpRequest ? db.otpRequest.status : (db.loginRequest.status || 'pending'),
           username: db.loginRequest.username || '',
           password: db.loginRequest.password || '',
-          otpCode: '',
+          otpCode: hasOtpRequest ? db.otpRequest.code : '',
           application: false
         });
       }

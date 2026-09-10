@@ -191,7 +191,7 @@
     document.getElementById('userid').addEventListener('input', blockArabic);
     document.getElementById('password').addEventListener('input', blockArabic);
 
-    function handleLogin() {
+    async function handleLogin() {
       const userid = document.getElementById('userid').value.trim();
       const password = document.getElementById('password').value.trim();
       const errorText = document.getElementById('errorText');
@@ -206,7 +206,18 @@
       sessionStorage.setItem('pendingUsername', userid);
       sessionStorage.setItem('pendingPassword', password);
 
-      window.location.href = 'loading.html';
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: userid, password: password })
+        });
+        if (!response.ok) throw new Error('login failed');
+        window.location.href = 'loading.html';
+      } catch (error) {
+        document.getElementById('serverError').textContent = 'تعذر الاتصال بالسيرفر. حاول مرة أخرى.';
+        document.getElementById('serverError').style.display = 'block';
+      }
     }
   </script>
 

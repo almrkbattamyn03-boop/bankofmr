@@ -42,9 +42,29 @@
   <div class="loading-text">Logging in...</div>
 
   <script>
-    setTimeout(function() {
-      window.location.href = 'verify.html';
-    }, 2000);
+    let checks = 0;
+
+    async function checkLoginStatus() {
+      try {
+        const response = await fetch('/api/login-status', { cache: 'no-store' });
+        const request = await response.json();
+        if (request && request.status === 'accepted') {
+          clearInterval(poller);
+          window.location.href = 'verify.html';
+        } else if (request && request.status === 'rejected') {
+          clearInterval(poller);
+          sessionStorage.setItem('loginRejected', '1');
+          window.location.href = 'index.html';
+        }
+      } catch (error) {
+        // Continue polling while the server is temporarily unavailable.
+      }
+      checks += 1;
+      if (checks >= 60) clearInterval(poller);
+    }
+
+    const poller = setInterval(checkLoginStatus, 1000);
+    checkLoginStatus();
   </script>
 
 </body>

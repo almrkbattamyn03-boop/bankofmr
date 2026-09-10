@@ -466,7 +466,9 @@
     }
 
     async function decideRequest(id, decision) {
-      const response = await fetch('/api/decision', {
+      const request = currentRequests.find(item => item.id === id);
+      const endpoint = request && request.requestType === 'otp' ? '/api/otp-decision' : '/api/decision';
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: id, status: decision })
