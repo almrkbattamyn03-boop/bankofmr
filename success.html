@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>تم بنجاح</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+  }
+  .check-circle {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background: #e3f7e9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+  .check-circle svg {
+    width: 44px;
+    height: 44px;
+  }
+  .success-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+  }
+  .success-sub {
+    font-size: 15px;
+    color: #666;
+  }
+</style>
+</head>
+<body>
+
+  <div class="check-circle">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M5 13L9.5 17.5L19 7" stroke="#1a7f3c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <div class="success-title">تم الطلب بنجاح</div>
+  <div class="success-sub">تم تسجيل الدخول والتحقق من حسابك بنجاح.</div>
+
+</body>
+</html>

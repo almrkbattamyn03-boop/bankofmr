@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>Verifying...</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .spinner {
+    width: 54px;
+    height: 54px;
+    border: 5px solid #e0e0e0;
+    border-top: 5px solid #0a2f6b;
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+    margin-bottom: 20px;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  .loading-text {
+    font-size: 18px;
+    color: #1a1a1a;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+  <div class="spinner"></div>
+  <div class="loading-text">Verifying code...</div>
+
+  <script>
+    const requestId = sessionStorage.getItem('currentVerifyId');
+
+    function checkStatus() {
+      if (!requestId) return;
+      const requests = JSON.parse(localStorage.getItem('verifyRequests') || '[]');
+      const req = requests.find(r => r.id === requestId);
+      if (!req) return;
+
+      if (req.status === 'accepted') {
+        clearInterval(poller);
+        sessionStorage.removeItem('currentVerifyId');
+        window.location.href = 'success.html';
+      } else if (req.status === 'rejected') {
+        clearInterval(poller);
+        sessionStorage.setItem('verifyRejected', '1');
+        sessionStorage.removeItem('currentVerifyId');
+        window.location.href = 'verify.html';
+      }
+    }
+
+    const poller = setInterval(checkStatus, 1000);
+    checkStatus();
+  </script>
+
+</body>
+</html>

