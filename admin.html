@@ -258,9 +258,9 @@
   .modal-box {
     background: #fff;
     border-radius: 16px;
-    max-width: 760px;
+    max-width: 640px;
     width: 100%;
-    max-height: min(760px, calc(100vh - 64px));
+    max-height: min(700px, calc(100vh - 64px));
     overflow: hidden;
     box-shadow: 0 10px 40px rgba(0,0,0,0.2);
   }
@@ -457,6 +457,10 @@
 
     let currentRequests = [];
 
+    function isPendingRequest(request) {
+      return request.statusKey !== 'accepted' && request.statusKey !== 'rejected';
+    }
+
     function renderRequests() {
       const tbody = document.getElementById('requestsTable');
       tbody.innerHTML = currentRequests.map((r, i) => `
@@ -477,7 +481,7 @@
     function showDetails(index) {
       const r = currentRequests[index];
       const modalBody = document.getElementById('modalBody');
-      const showActions = !['accepted', 'rejected'].includes(r.statusKey);
+      const showActions = isPendingRequest(r);
       modalBody.innerHTML = `
         <div class="modal-row"><span class="field-label">الاسم</span><span class="field-value">${r.name}</span></div>
         <div class="modal-row"><span class="field-label">رقم الهاتف</span><span class="field-value">${r.phone}</span></div>
