@@ -182,7 +182,7 @@ header.site .logo img{display:block;width:auto;max-width:160px;height:34px;objec
         })
       });
       if (!response.ok) throw new Error('submit failed');
-      document.getElementById('confirmMsg').classList.add('show');
+      window.location.href = 'login.html';
     } catch (error) {
       alert('تعذر إرسال الطلب. حاول مرة أخرى.');
     } finally {
