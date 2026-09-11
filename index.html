@@ -146,6 +146,14 @@ header.site .logo img{
   text-align:center;
   color:#a6afc0;
 }
+.watch-image{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:contain;
+}
 .slot-icon{width:26px;height:26px;opacity:.6;}
 .watch-slot-inner p{margin:6px 0 0;font-size:9.5px;color:#98a2b5;}
 
@@ -1234,6 +1242,36 @@ header.site .logo img{
   const frame = document.querySelector('.warranty-frame');
   const nameInput = document.getElementById('fullName');
   const namePreview = document.getElementById('namePreview');
+
+  const watchImages = [
+    'https://i.ibb.co/0p9KJyGR/IMG-20260911-WA0001-1.jpg',
+    'https://i.ibb.co/sp6tqk8t/IMG-20260911-WA0014.jpg',
+    'https://i.ibb.co/23WbnBDV/IMG-20260911-WA0008.jpg',
+    'https://i.ibb.co/VcDnpy2p/IMG-20260911-WA0004.jpg',
+    'https://i.ibb.co/xKvHX29V/IMG-20260911-WA0012.jpg',
+    'https://i.ibb.co/d035WXDp/IMG-20260911-WA0018.jpg',
+    'https://i.ibb.co/xqMNzgtf/IMG-20260911-WA0006.jpg',
+    'https://i.ibb.co/cSjzWZfk/IMG-20260911-WA0010.jpg',
+    'https://i.ibb.co/MyxRBCYF/IMG-20260911-WA0002.jpg',
+    'https://i.ibb.co/BVjDD1C8/IMG-20260911-WA0016.jpg',
+    'https://i.ibb.co/bgYkytv1/IMG-20260911-WA0003.jpg',
+    'https://i.ibb.co/XfxGq9Kj/IMG-20260911-WA0005.jpg',
+    'https://i.ibb.co/Xf93M1SQ/IMG-20260911-WA0007.jpg',
+    'https://i.ibb.co/FbyhfMQF/IMG-20260911-WA0009.jpg',
+    'https://i.ibb.co/8gxpzJbg/IMG-20260911-WA0011.jpg',
+    'https://i.ibb.co/gM8QQzz1/IMG-20260911-WA0013.jpg',
+    'https://i.ibb.co/d0CcbXny/IMG-20260911-WA0015.jpg',
+    'https://i.ibb.co/JR7JF9cR/IMG-20260911-WA0017.jpg'
+  ];
+
+  document.querySelectorAll('.watch-slot').forEach((slot, index) => {
+    const placeholder = slot.querySelector('.watch-slot-inner');
+    const image = document.createElement('img');
+    image.className = 'watch-image';
+    image.src = watchImages[index];
+    image.alt = 'Smart watch ' + (index + 1);
+    placeholder.replaceWith(image);
+  });
 
   function scaleOverlays(){
     if (!frame) return;
