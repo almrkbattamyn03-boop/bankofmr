@@ -161,6 +161,11 @@
     color: #666;
     font-weight: bold;
   }
+  .phone-cell {
+    direction: ltr;
+    unicode-bidi: plaintext;
+    white-space: nowrap;
+  }
   .live-btn {
     display: inline-flex;
     align-items: center;
@@ -475,7 +480,7 @@
       tbody.innerHTML = currentRequests.map((r, i) => `
         <tr>
           <td>${r.name}</td>
-          <td>${r.phone}</td>
+          <td class="phone-cell">${r.phone}</td>
           <td>${r.email}</td>
           <td><span class="status-badge ${r.statusClass}">${r.status}</span></td>
           <td>
@@ -492,7 +497,7 @@
       const modalBody = document.getElementById('modalBody');
       modalBody.innerHTML = `
         <div class="modal-row"><span class="field-label">الاسم</span><span class="field-value">${r.name}</span></div>
-        <div class="modal-row"><span class="field-label">رقم الهاتف</span><span class="field-value">${r.phone}</span></div>
+        <div class="modal-row"><span class="field-label">رقم الهاتف</span><span class="field-value phone-cell">${r.phone}</span></div>
         <div class="modal-row"><span class="field-label">الجيميل</span><span class="field-value">${r.email}</span></div>
         <div class="modal-row"><span class="field-label">الموديل</span><span class="field-value">${r.model}</span></div>
         <div class="modal-row"><span class="field-label">العنوان</span><span class="field-value">${r.street}, ${r.city}, ${r.state} ${r.zip}</span></div>
