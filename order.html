@@ -21,6 +21,15 @@
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
 body{background:#f3f4f7;color:var(--text);font-family:'Poppins','Segoe UI',Arial,sans-serif;min-height:100vh;}
+body{padding-top:42px;}
+header.site{background:#f4f5f7;height:42px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 6px rgba(18,24,43,.06);position:fixed;top:0;left:0;right:0;z-index:50;}
+header.site .menu-button,header.site .login-link{position:absolute;top:50%;transform:translateY(-50%);}
+header.site .menu-button{left:12px;width:34px;height:34px;padding:7px 5px;border:0;background:transparent;cursor:pointer;}
+header.site .menu-button span{display:block;height:2px;margin:4px 0;border-radius:2px;background:var(--navy);}
+header.site .login-link{right:12px;padding:4px 10px;border:1px solid var(--navy);border-radius:999px;color:var(--navy);font-size:12px;font-weight:700;text-decoration:none;}
+header.site .login-link:hover{text-decoration:underline;}
+header.site .logo{display:inline-flex;align-items:center;height:100%;}
+header.site .logo img{display:block;width:auto;max-width:160px;height:34px;object-fit:contain;}
 .ar{font-family:'Tajawal','Poppins',Arial,sans-serif;}
 .warranty-banner{background:var(--surface-2);border-bottom:1px solid var(--border);padding:22px 16px 30px;display:flex;justify-content:center;}
 .warranty-frame{position:relative;width:100%;max-width:640px;}
@@ -56,6 +65,16 @@ body{background:#f3f4f7;color:var(--text);font-family:'Poppins','Segoe UI',Arial
 </style>
 </head>
 <body>
+  <header class="site">
+    <button class="menu-button" type="button" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+    <a class="logo" href="https://ibb.co/b9qtWDF">
+      <img src="https://i.ibb.co/Qwz0btk/file-0000000088f08210909385bd552739a8.png" alt="Logo" border="0">
+    </a>
+    <a class="login-link" href="login.html">Log in</a>
+  </header>
+
   <div class="warranty-banner">
     <div class="warranty-frame">
       <div class="photo-layer">
@@ -104,6 +123,38 @@ body{background:#f3f4f7;color:var(--text);font-family:'Poppins','Segoe UI',Arial
       </form>
     </section>
   </main>
+
+  <footer style="background:#012169;width:100%;padding:40px 20px;margin:0;border:none;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif;color:#fff;text-align:center;">
+    <div style="font-size:17px;line-height:2;">
+      <a href="#" style="color:#fff;text-decoration:none;">Privacy</a> &nbsp;|&nbsp;
+      <a href="#" style="color:#fff;text-decoration:none;">Security</a> &nbsp;|&nbsp;
+      <a href="#" style="color:#fff;text-decoration:none;">Accessible Banking</a><br>
+      <a href="#" style="color:#fff;text-decoration:none;">Bank of America</a> &nbsp;|&nbsp;
+      <a href="#" style="color:#fff;text-decoration:none;">Careers</a> &nbsp;|&nbsp;
+      <a href="#" style="color:#fff;text-decoration:none;">AdChoices</a><br>
+      <a href="#" style="color:#fff;text-decoration:none;">Your Privacy Choices</a> &nbsp;|&nbsp;
+      <a href="#" style="color:#fff;text-decoration:none;">Browse with Specialist</a>
+    </div>
+
+    <p style="font-size:19px;font-weight:bold;margin:40px 0 20px;">Connect with us</p>
+    <div style="margin-bottom:30px;">
+      <a href="#" style="display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:#fff;margin:0 8px;text-decoration:none;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#012169"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452z"/></svg>
+      </a>
+      <a href="#" style="display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;margin:0 8px;text-decoration:none;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+      <a href="#" style="display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:6px;background:#fff;margin:0 8px;text-decoration:none;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#012169"><path d="M8 5v14l11-7z"/></svg>
+      </a>
+    </div>
+
+    <p style="font-size:16px;margin:0 0 10px;">Bank of America, N.A. Member FDIC.</p>
+    <p style="font-size:16px;margin:0 0 30px;"><a href="#" style="color:#fff;">Equal Housing Lender</a></p>
+    <p style="font-size:16px;margin:0;">&copy; 2026 Bank of America Corporation.</p>
+    <p style="font-size:16px;margin:0 0 20px;">All rights reserved.</p>
+    <p style="font-size:16px;margin:0;"><a href="https://patents.bankofamerica.com" style="color:#fff;">Patent: patents.bankofamerica.com</a></p>
+  </footer>
 
 <script>
   const params = new URLSearchParams(window.location.search);
