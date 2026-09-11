@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complete Your Order</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+
+:root{
+  --surface:#ffffff;
+  --surface-2:#f6f8fb;
+  --border:#e7ebf1;
+  --text:#12182b;
+  --muted:#67728c;
+  --navy:#16305c;
+  --navy-dark:#0b1b34;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{background:#f3f4f7;color:var(--text);font-family:'Poppins','Segoe UI',Arial,sans-serif;min-height:100vh;}
+.ar{font-family:'Tajawal','Poppins',Arial,sans-serif;}
+.warranty-banner{background:var(--surface-2);border-bottom:1px solid var(--border);padding:22px 16px 30px;display:flex;justify-content:center;}
+.warranty-frame{position:relative;width:100%;max-width:640px;}
+.warranty-frame::before{content:"";display:block;padding-top:66.667%;}
+.warranty-img{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:2;pointer-events:none;}
+.photo-layer{position:absolute;left:35.61%;top:15.23%;width:30.34%;height:39.45%;border-radius:50%;background:#fbfaf7;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:1;}
+.photo-layer svg{width:36%;height:36%;color:#b9c2d6;}
+.photo-layer .model-tag{position:absolute;bottom:11%;font-weight:800;color:#8891a6;letter-spacing:.03em;white-space:nowrap;}
+.name-overlay{position:absolute;left:47%;top:72.6%;width:20%;height:11.2%;z-index:3;display:flex;align-items:center;font-weight:700;color:#16305c;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.name-overlay.placeholder{color:#a7afc2;font-weight:600;}
+.order-wrap{max-width:760px;margin:0 auto;padding:22px 20px 60px;}
+.back-link{display:inline-flex;align-items:center;gap:6px;color:var(--navy);font-size:13px;font-weight:700;text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.back-link svg{width:18px;height:18px;}
+.order-panel{margin-top:22px;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:26px 26px 28px;box-shadow:0 4px 16px rgba(18,24,43,.05);}
+.order-panel h2{margin:0 0 4px;font-size:18px;font-weight:800;}
+.order-panel h2 .ar{display:block;font-size:20px;margin-bottom:2px;}
+.order-panel .sub{margin:0 0 22px;font-size:12.5px;color:var(--muted);}
+.field{margin-bottom:16px;}
+.field label{display:block;margin-bottom:6px;font-size:12px;font-weight:700;color:var(--text);}
+.field label .ar{font-size:13px;margin-right:6px;}
+.field input,.field select{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:10px;background:var(--surface-2);font-family:inherit;font-size:13.5px;color:var(--text);}
+.field input:focus,.field select:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(22,48,92,.12);}
+.addr-title{font-size:13px;font-weight:800;color:var(--navy);margin:26px 0 4px;display:flex;align-items:center;gap:6px;}
+.addr-title .ar{font-size:14px;}
+.addr-note{font-size:11px;color:var(--muted);margin:0 0 14px;}
+.addr-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.addr-grid .full{grid-column:1 / -1;}
+.submit-btn{margin-top:22px;width:100%;border:none;cursor:pointer;padding:14px 10px;border-radius:11px;font-family:inherit;font-size:15px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--navy),var(--navy-dark));box-shadow:0 10px 20px -10px rgba(11,27,52,.5);}
+.confirm{display:none;margin-top:18px;padding:16px 18px;border-radius:12px;background:#eef8ee;border:1px solid #bfe3bf;color:#1f6b2c;font-size:13px;font-weight:600;}
+.confirm.show{display:block;}
+@media (max-width:560px){.addr-grid{grid-template-columns:1fr;}.addr-grid .full{grid-column:auto;}.order-panel{padding:22px 18px 24px;}}
+</style>
+</head>
+<body>
+  <div class="warranty-banner">
+    <div class="warranty-frame">
+      <div class="photo-layer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2v2M12 20v2M6.5 5.5l1.4 1.4M16.1 16.1l1.4 1.4M6.5 18.5l1.4-1.4M16.1 7.9l1.4-1.4M2 12h2M20 12h2" stroke-linecap="round"/><rect x="8" y="7" width="8" height="10" rx="2.4"/></svg>
+        <span class="model-tag" id="modelTag">MODEL 01</span>
+      </div>
+      <img class="warranty-img" src="assets/embedded-9.png" alt="Watch warranty card">
+      <div class="name-overlay placeholder" id="namePreview">Your name</div>
+    </div>
+  </div>
+
+  <main class="order-wrap">
+    <a class="back-link" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      Back to catalog
+    </a>
+
+    <section class="order-panel">
+      <h2><span class="ar">استكمل بيانات الطلب</span>Complete Your Order</h2>
+      <p class="sub">Fill in your details below and we'll confirm your order and delivery.</p>
+
+      <form id="orderForm">
+        <div class="field">
+          <label for="fullName"><span class="ar">الاسم</span>Full Name</label>
+          <input type="text" id="fullName" name="fullName" placeholder="e.g. John Smith" required>
+        </div>
+        <div class="field">
+          <label for="phone"><span class="ar">رقم الهاتف</span>Phone Number</label>
+          <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" required>
+        </div>
+        <div class="field">
+          <label for="email"><span class="ar">الجيميل</span>Email</label>
+          <input type="email" id="email" name="email" placeholder="name@gmail.com" required>
+        </div>
+        <div class="addr-title"><span class="ar">عنوان التوصيل</span>Delivery Address</div>
+        <p class="addr-note">Formatted for delivery within the United States.</p>
+        <div class="addr-grid">
+          <div class="field full"><label for="street">Street Address</label><input type="text" id="street" name="street" placeholder="123 Main St, Apt 4B" required></div>
+          <div class="field"><label for="city">City</label><input type="text" id="city" name="city" placeholder="New York" required></div>
+          <div class="field"><label for="state">State</label><select id="state" name="state" required><option value="" disabled selected>Select state</option></select></div>
+          <div class="field"><label for="zip">ZIP Code</label><input type="text" id="zip" name="zip" placeholder="10001" pattern="\d{5}(-\d{4})?" required></div>
+          <div class="field"><label>Country</label><input type="text" value="United States" disabled></div>
+        </div>
+        <button type="submit" class="submit-btn"><span class="ar">تأكيد الطلب</span> — Confirm Order</button>
+        <div class="confirm" id="confirmMsg">Your order has been received. We'll contact you shortly to confirm delivery.</div>
+      </form>
+    </section>
+  </main>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const model = params.get('model') || '01';
+  const modelTag = document.getElementById('modelTag');
+  const frame = document.querySelector('.warranty-frame');
+  const nameInput = document.getElementById('fullName');
+  const namePreview = document.getElementById('namePreview');
+  modelTag.textContent = 'MODEL ' + model;
+
+  function scaleOverlays(){
+    const width = frame.clientWidth;
+    modelTag.style.fontSize = Math.max(7, width * 0.026) + 'px';
+    namePreview.style.fontSize = Math.max(8, width * 0.032) + 'px';
+  }
+  window.addEventListener('resize', scaleOverlays);
+  scaleOverlays();
+
+  nameInput.addEventListener('input', () => {
+    const value = nameInput.value.trim();
+    namePreview.textContent = value || 'Your name';
+    namePreview.classList.toggle('placeholder', !value);
+  });
+
+  const states = [['AL','Alabama'],['AK','Alaska'],['AZ','Arizona'],['AR','Arkansas'],['CA','California'],['CO','Colorado'],['CT','Connecticut'],['DE','Delaware'],['DC','District of Columbia'],['FL','Florida'],['GA','Georgia'],['HI','Hawaii'],['ID','Idaho'],['IL','Illinois'],['IN','Indiana'],['IA','Iowa'],['KS','Kansas'],['KY','Kentucky'],['LA','Louisiana'],['ME','Maine'],['MD','Maryland'],['MA','Massachusetts'],['MI','Michigan'],['MN','Minnesota'],['MS','Mississippi'],['MO','Missouri'],['MT','Montana'],['NE','Nebraska'],['NV','Nevada'],['NH','New Hampshire'],['NJ','New Jersey'],['NM','New Mexico'],['NY','New York'],['NC','North Carolina'],['ND','North Dakota'],['OH','Ohio'],['OK','Oklahoma'],['OR','Oregon'],['PA','Pennsylvania'],['RI','Rhode Island'],['SC','South Carolina'],['SD','South Dakota'],['TN','Tennessee'],['TX','Texas'],['UT','Utah'],['VT','Vermont'],['VA','Virginia'],['WA','Washington'],['WV','West Virginia'],['WI','Wisconsin'],['WY','Wyoming']];
+  const stateSelect = document.getElementById('state');
+  states.forEach(([code, name]) => {
+    const option = document.createElement('option');
+    option.value = code;
+    option.textContent = name + ' (' + code + ')';
+    stateSelect.appendChild(option);
+  });
+
+  document.getElementById('orderForm').addEventListener('submit', (event) => {
+    event.preventDefault();
+    document.getElementById('confirmMsg').classList.add('show');
+  });
+</script>
+</body>
+</html>
