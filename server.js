@@ -6,9 +6,39 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const PORT = Number(process.env.PORT) || 3000;
 const DB_FILE = path.join(__dirname, 'db.json');
+const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH || '01c03ad11e315195b7d09be273bdc9fa:a1f5f9d2023d3c474f6a7f75e5d4944325e35dcea3d8e2d381787950c53cd2d83040f538346565e831872e83aa6fa855b104cec64725d9d075e5d3440c99a152';
+const adminSessions = new Map();
+const ADMIN_SESSION_TTL_MS = 8 * 60 * 60 * 1000;
+
+function parseCookies(req) {
+  return Object.fromEntries((req.headers.cookie || '').split(';').filter(Boolean).map(cookie => {
+    const separator = cookie.indexOf('=');
+    return [cookie.slice(0, separator).trim(), decodeURIComponent(cookie.slice(separator + 1).trim())];
+  }));
+}
+
+function verifyAdminPassword(password) {
+  const [salt, expectedHex] = ADMIN_PASSWORD_HASH.split(':');
+  if (!salt || !expectedHex) return false;
+  const actual = crypto.scryptSync(password || '', salt, expectedHex.length / 2);
+  const expected = Buffer.from(expectedHex, 'hex');
+  return actual.length === expected.length && crypto.timingSafeEqual(actual, expected);
+}
+
+function isAdminAuthenticated(req) {
+  const token = parseCookies(req).admin_session;
+  const expiresAt = token && adminSessions.get(token);
+  if (!expiresAt) return false;
+  if (expiresAt < Date.now()) {
+    adminSessions.delete(token);
+    return false;
+  }
+  return true;
+}
 
 // ---------- تتبع الزيارات النشطة الحقيقية ----------
 // كل صفحة مفتوحة (index.html) بتبعت "نبضة" (heartbeat) كل شوية ثواني.
@@ -106,6 +136,41 @@ function serveStaticFile(req, res, urlPath) {
 const server = http.createServer((req, res) => {
   const urlObj = new URL(req.url, `http://localhost:${PORT}`);
   const pathname = urlObj.pathname;
+
+  // ---- مصادقة لوحة الإدارة ----
+  if (pathname === '/api/admin-login' && req.method === 'POST') {
+    readRequestBody(req, (err, body) => {
+      if (err || !verifyAdminPassword(body.password)) {
+        sendJSON(res, 401, { error: 'كلمة المرور غير صحيحة' });
+        return;
+      }
+      const token = crypto.randomBytes(32).toString('hex');
+      adminSessions.set(token, Date.now() + ADMIN_SESSION_TTL_MS);
+      res.writeHead(200, {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Set-Cookie': `admin_session=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=${ADMIN_SESSION_TTL_MS / 1000}`
+      });
+      res.end(JSON.stringify({ ok: true }));
+    });
+    return;
+  }
+
+  if (pathname === '/api/admin-logout' && req.method === 'POST') {
+    const token = parseCookies(req).admin_session;
+    if (token) adminSessions.delete(token);
+    res.writeHead(200, {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Set-Cookie': 'admin_session=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0'
+    });
+    res.end(JSON.stringify({ ok: true }));
+    return;
+  }
+
+  const adminProtectedPaths = ['/api/users', '/api/decision', '/api/otp-decision', '/api/application-data'];
+  if (adminProtectedPaths.includes(pathname) && !isAdminAuthenticated(req)) {
+    sendJSON(res, 401, { error: 'غير مصرح' });
+    return;
+  }
 
   // ---- API: تسجيل الدخول (تخزين طلب في قاعدة البيانات) ----
   if (pathname === '/api/login' && req.method === 'POST') {

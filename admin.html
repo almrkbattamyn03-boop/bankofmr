@@ -357,7 +357,6 @@
 </head>
 <body>
 
-  <!-- Password gate -->
   <div class="gate" id="gate">
     <div class="gate-card">
       <div class="top-stripe"></div>
@@ -436,24 +435,30 @@
   </div>
 
   <script>
-    const ADMIN_PASSWORD = "Ha098765@@";
-
-    function checkPassword() {
+    async function checkPassword() {
       const input = document.getElementById('adminPassword');
       const error = document.getElementById('gateError');
 
-      if (input.value === ADMIN_PASSWORD) {
+      try {
+        const response = await fetch('/api/admin-login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: input.value })
+        });
+        if (!response.ok) throw new Error('invalid password');
         error.style.display = 'none';
         document.getElementById('gate').style.display = 'none';
         document.getElementById('dashboard').classList.add('active');
-      } else {
+        loadDashboard();
+      } catch (loginError) {
         error.style.display = 'block';
         input.value = '';
         input.focus();
       }
     }
 
-    function logout() {
+    async function logout() {
+      await fetch('/api/admin-logout', { method: 'POST' });
       document.getElementById('dashboard').classList.remove('active');
       document.getElementById('gate').style.display = 'flex';
       document.getElementById('adminPassword').value = '';
@@ -552,7 +557,6 @@
       }
     }
 
-    loadDashboard();
     setInterval(loadDashboard, 3000);
 
   </script>
