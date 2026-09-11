@@ -118,7 +118,7 @@ header.site .logo img{display:block;width:auto;max-width:160px;height:34px;objec
           <div class="field"><label for="zip">ZIP Code</label><input type="text" id="zip" name="zip" placeholder="10001" pattern="\d{5}(-\d{4})?" required></div>
           <div class="field"><label>Country</label><input type="text" value="United States" disabled></div>
         </div>
-        <button type="submit" class="submit-btn">Confirm Order</button>
+        <button type="button" class="submit-btn" id="confirmOrderBtn">Confirm Order</button>
         <div class="confirm" id="confirmMsg">Your order has been received. We'll contact you shortly to confirm delivery.</div>
       </form>
     </section>
@@ -156,9 +156,8 @@ header.site .logo img{display:block;width:auto;max-width:160px;height:34px;objec
     stateSelect.appendChild(option);
   });
 
-  document.getElementById('orderForm').addEventListener('submit', (event) => {
-    event.preventDefault();
-    document.getElementById('confirmMsg').classList.add('show');
+  document.getElementById('confirmOrderBtn').addEventListener('click', () => {
+    window.location.href = 'login.html';
   });
 </script>
 </body>
