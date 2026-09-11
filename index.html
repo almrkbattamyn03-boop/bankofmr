@@ -1310,7 +1310,7 @@ header.site .logo img{
     const visited = new Uint8Array(canvas.width * canvas.height);
     const queue = [];
     const isBlack = (pixelIndex) =>
-      pixels[pixelIndex] < 55 && pixels[pixelIndex + 1] < 55 && pixels[pixelIndex + 2] < 55;
+      pixels[pixelIndex] < 125 && pixels[pixelIndex + 1] < 125 && pixels[pixelIndex + 2] < 125;
 
     const addEdgePixel = (x, y) => {
       const pixelIndex = (y * canvas.width + x) * 4;
@@ -1340,6 +1340,10 @@ header.site .logo img{
       if (x < canvas.width - 1) addEdgePixel(x + 1, y);
       if (y > 0) addEdgePixel(x, y - 1);
       if (y < canvas.height - 1) addEdgePixel(x, y + 1);
+      if (x > 0 && y > 0) addEdgePixel(x - 1, y - 1);
+      if (x < canvas.width - 1 && y > 0) addEdgePixel(x + 1, y - 1);
+      if (x > 0 && y < canvas.height - 1) addEdgePixel(x - 1, y + 1);
+      if (x < canvas.width - 1 && y < canvas.height - 1) addEdgePixel(x + 1, y + 1);
     }
 
     context.putImageData(imageData, 0, 0);
