@@ -50,6 +50,36 @@ header.site{
   right:0;
   z-index:50;
 }
+header.site .menu-button,
+header.site .login-link{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+}
+header.site .menu-button{
+  left:12px;
+  width:34px;
+  height:34px;
+  padding:7px 5px;
+  border:0;
+  background:transparent;
+  cursor:pointer;
+}
+header.site .menu-button span{
+  display:block;
+  height:2px;
+  margin:4px 0;
+  border-radius:2px;
+  background:var(--navy);
+}
+header.site .login-link{
+  right:12px;
+  color:var(--red);
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+}
+header.site .login-link:hover{text-decoration:underline;}
 header.site .logo{
   display:inline-flex;
   align-items:center;
@@ -380,9 +410,13 @@ header.site .logo img{
 <body>
 
   <header class="site">
+    <button class="menu-button" type="button" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
     <a class="logo" href="https://ibb.co/b9qtWDF">
       <img src="https://i.ibb.co/Qwz0btk/file-0000000088f08210909385bd552739a8.png" alt="Logo" border="0">
     </a>
+    <a class="login-link" href="login.html">Log in</a>
   </header>
 
   <div id="catalogView">
