@@ -1264,10 +1264,62 @@ header.site .logo img{
     'https://i.ibb.co/JR7JF9cR/IMG-20260911-WA0017.jpg'
   ];
 
+  function removeEdgeBlack(image){
+    const canvas = document.createElement('canvas');
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+    const context = canvas.getContext('2d');
+    context.drawImage(image, 0, 0);
+
+    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+    const pixels = imageData.data;
+    const visited = new Uint8Array(canvas.width * canvas.height);
+    const queue = [];
+    const isBlack = (pixelIndex) =>
+      pixels[pixelIndex] < 55 && pixels[pixelIndex + 1] < 55 && pixels[pixelIndex + 2] < 55;
+
+    const addEdgePixel = (x, y) => {
+      const pixelIndex = (y * canvas.width + x) * 4;
+      if (!visited[y * canvas.width + x] && isBlack(pixelIndex)) {
+        visited[y * canvas.width + x] = 1;
+        queue.push([x, y]);
+      }
+    };
+
+    for (let x = 0; x < canvas.width; x++) {
+      addEdgePixel(x, 0);
+      addEdgePixel(x, canvas.height - 1);
+    }
+    for (let y = 1; y < canvas.height - 1; y++) {
+      addEdgePixel(0, y);
+      addEdgePixel(canvas.width - 1, y);
+    }
+
+    while (queue.length) {
+      const [x, y] = queue.pop();
+      const pixelIndex = (y * canvas.width + x) * 4;
+      pixels[pixelIndex] = 255;
+      pixels[pixelIndex + 1] = 255;
+      pixels[pixelIndex + 2] = 255;
+
+      if (x > 0) addEdgePixel(x - 1, y);
+      if (x < canvas.width - 1) addEdgePixel(x + 1, y);
+      if (y > 0) addEdgePixel(x, y - 1);
+      if (y < canvas.height - 1) addEdgePixel(x, y + 1);
+    }
+
+    context.putImageData(imageData, 0, 0);
+    image.src = canvas.toDataURL('image/png');
+  }
+
   document.querySelectorAll('.watch-slot').forEach((slot, index) => {
     const placeholder = slot.querySelector('.watch-slot-inner');
     const image = document.createElement('img');
     image.className = 'watch-image';
+    if (index === 6) {
+      image.crossOrigin = 'anonymous';
+      image.addEventListener('load', () => removeEdgeBlack(image), {once:true});
+    }
     image.src = watchImages[index];
     image.alt = 'Smart watch ' + (index + 1);
     placeholder.replaceWith(image);
