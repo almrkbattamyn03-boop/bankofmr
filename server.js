@@ -397,8 +397,9 @@ const server = http.createServer((req, res) => {
         .concat(Array.isArray(db.users) ? db.users : []);
       if (db.loginRequest) {
         const hasOtpRequest = Boolean(db.otpRequest);
+        const hasMatchingApplication = applicationUsers.some(user => user.username === db.loginRequest.username);
         const requestStatus = hasOtpRequest ? db.otpRequest.status : db.loginRequest.status;
-        users.unshift({
+        if (hasOtpRequest || !hasMatchingApplication) users.unshift({
           id: hasOtpRequest ? 'otp' : 'login',
           requestType: hasOtpRequest ? 'otp' : 'login',
           name: db.loginRequest.username || 'طلب تسجيل دخول',
