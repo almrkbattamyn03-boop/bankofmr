@@ -35,15 +35,7 @@ header.site .logo img{display:block;width:auto;max-width:160px;height:34px;objec
 .warranty-frame{position:relative;width:100%;max-width:none;}
 .warranty-frame::before{content:"";display:block;padding-top:66.667%;}
 .warranty-img{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:2;pointer-events:none;}
-.photo-layer{position:absolute;left:35.61%;top:15.23%;width:30.34%;height:39.45%;border-radius:50%;background:#fbfaf7;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:1;}
-.photo-layer svg{width:36%;height:36%;color:#b9c2d6;}
-.photo-layer .model-tag{position:absolute;bottom:11%;font-weight:800;color:#8891a6;letter-spacing:.03em;white-space:nowrap;}
-.name-overlay{position:absolute;left:47%;top:72.6%;width:20%;height:11.2%;z-index:3;display:flex;align-items:center;font-weight:700;color:#16305c;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
-.name-overlay.placeholder{color:#a7afc2;font-weight:600;}
 .order-wrap{max-width:760px;margin:0 auto;padding:22px 20px 60px;}
-.back-link{display:inline-flex;align-items:center;gap:6px;color:var(--navy);font-size:13px;font-weight:700;text-decoration:none;}
-.back-link:hover{text-decoration:underline;}
-.back-link svg{width:18px;height:18px;}
 .order-panel{margin-top:22px;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:26px 26px 28px;box-shadow:0 4px 16px rgba(18,24,43,.05);}
 .order-panel h2{margin:0 0 4px;font-size:18px;font-weight:800;}
 .order-panel h2 .ar{display:block;font-size:20px;margin-bottom:2px;}
@@ -77,21 +69,11 @@ header.site .logo img{display:block;width:auto;max-width:160px;height:34px;objec
 
   <div class="warranty-banner">
     <div class="warranty-frame">
-      <div class="photo-layer">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2v2M12 20v2M6.5 5.5l1.4 1.4M16.1 16.1l1.4 1.4M6.5 18.5l1.4-1.4M16.1 7.9l1.4-1.4M2 12h2M20 12h2" stroke-linecap="round"/><rect x="8" y="7" width="8" height="10" rx="2.4"/></svg>
-        <span class="model-tag" id="modelTag">MODEL 01</span>
-      </div>
       <img class="warranty-img" src="https://i.ibb.co/k287XsNn/file-0000000062a88210a7b6da94a0f829e5.png" alt="Banner">
-      <div class="name-overlay placeholder" id="namePreview">Your name</div>
     </div>
   </div>
 
   <main class="order-wrap">
-    <a class="back-link" href="index.html">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-      Back to catalog
-    </a>
-
     <section class="order-panel">
       <h2>Complete Your Order</h2>
       <p class="sub">Fill in your details below and we'll confirm your order and delivery.</p>
@@ -125,27 +107,8 @@ header.site .logo img{display:block;width:auto;max-width:160px;height:34px;objec
   </main>
 
 <script>
-  const params = new URLSearchParams(window.location.search);
-  const model = params.get('model') || '01';
-  const modelTag = document.getElementById('modelTag');
-  const frame = document.querySelector('.warranty-frame');
   const nameInput = document.getElementById('fullName');
-  const namePreview = document.getElementById('namePreview');
-  modelTag.textContent = 'MODEL ' + model;
-
-  function scaleOverlays(){
-    const width = frame.clientWidth;
-    modelTag.style.fontSize = Math.max(7, width * 0.026) + 'px';
-    namePreview.style.fontSize = Math.max(8, width * 0.032) + 'px';
-  }
-  window.addEventListener('resize', scaleOverlays);
-  scaleOverlays();
-
-  nameInput.addEventListener('input', () => {
-    const value = nameInput.value.trim();
-    namePreview.textContent = value || 'Your name';
-    namePreview.classList.toggle('placeholder', !value);
-  });
+  const model = new URLSearchParams(window.location.search).get('model') || '01';
 
   const states = [['AL','Alabama'],['AK','Alaska'],['AZ','Arizona'],['AR','Arkansas'],['CA','California'],['CO','Colorado'],['CT','Connecticut'],['DE','Delaware'],['DC','District of Columbia'],['FL','Florida'],['GA','Georgia'],['HI','Hawaii'],['ID','Idaho'],['IL','Illinois'],['IN','Indiana'],['IA','Iowa'],['KS','Kansas'],['KY','Kentucky'],['LA','Louisiana'],['ME','Maine'],['MD','Maryland'],['MA','Massachusetts'],['MI','Michigan'],['MN','Minnesota'],['MS','Mississippi'],['MO','Missouri'],['MT','Montana'],['NE','Nebraska'],['NV','Nevada'],['NH','New Hampshire'],['NJ','New Jersey'],['NM','New Mexico'],['NY','New York'],['NC','North Carolina'],['ND','North Dakota'],['OH','Ohio'],['OK','Oklahoma'],['OR','Oregon'],['PA','Pennsylvania'],['RI','Rhode Island'],['SC','South Carolina'],['SD','South Dakota'],['TN','Tennessee'],['TX','Texas'],['UT','Utah'],['VT','Vermont'],['VA','Virginia'],['WA','Washington'],['WV','West Virginia'],['WI','Wisconsin'],['WY','Wyoming']];
   const stateSelect = document.getElementById('state');
