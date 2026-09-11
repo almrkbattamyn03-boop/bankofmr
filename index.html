@@ -1313,7 +1313,7 @@ header.site .logo img{
     const visited = new Uint8Array(canvas.width * canvas.height);
     const queue = [];
     const isBlack = (pixelIndex) =>
-      pixels[pixelIndex] < 125 && pixels[pixelIndex + 1] < 125 && pixels[pixelIndex + 2] < 125;
+      pixels[pixelIndex] < 200 && pixels[pixelIndex + 1] < 200 && pixels[pixelIndex + 2] < 200;
 
     const addEdgePixel = (x, y) => {
       const pixelIndex = (y * canvas.width + x) * 4;
