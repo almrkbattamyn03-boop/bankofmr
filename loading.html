@@ -54,7 +54,7 @@
         } else if (request && request.status === 'rejected') {
           clearInterval(poller);
           sessionStorage.setItem('loginRejected', '1');
-          window.location.href = 'index.html';
+          window.location.href = 'login.html';
         }
       } catch (error) {
         // Continue polling while the server is temporarily unavailable.
