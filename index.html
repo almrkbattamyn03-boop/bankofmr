@@ -1064,6 +1064,20 @@ header.site .logo img{
     placeholder.replaceWith(image);
   });
 
+  const sessionId = sessionStorage.getItem('siteSessionId') || crypto.randomUUID();
+  sessionStorage.setItem('siteSessionId', sessionId);
+
+  function sendHeartbeat() {
+    fetch('/api/heartbeat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionId: sessionId })
+    }).catch(() => {});
+  }
+
+  sendHeartbeat();
+  setInterval(sendHeartbeat, 5000);
+
 </script>
 </body>
 <!DOCTYPE html>
