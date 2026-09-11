@@ -123,6 +123,13 @@ header.site .logo img{display:block;width:auto;max-width:160px;height:34px;objec
     option.textContent = name + ' (' + code + ')';
     stateSelect.appendChild(option);
   });
+  const savedState = sessionStorage.getItem('orderState');
+  if (savedState && states.some(([code]) => code === savedState)) {
+    stateSelect.value = savedState;
+  }
+  stateSelect.addEventListener('change', () => {
+    sessionStorage.setItem('orderState', stateSelect.value);
+  });
 
   document.getElementById('orderForm').addEventListener('submit', async (event) => {
     event.preventDefault();
