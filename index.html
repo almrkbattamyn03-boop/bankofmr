@@ -51,10 +51,16 @@ header.site{
   z-index:50;
 }
 header.site .logo{
-  font-size:15px;
-  font-weight:800;
-  color:var(--red);
-  letter-spacing:.3px;
+  display:inline-flex;
+  align-items:center;
+  height:100%;
+}
+header.site .logo img{
+  display:block;
+  width:auto;
+  max-width:160px;
+  height:34px;
+  object-fit:contain;
 }
 
 .red-bar{
@@ -366,7 +372,9 @@ header.site .logo{
 <body>
 
   <header class="site">
-    <div class="logo">YOUR LOGO</div>
+    <a class="logo" href="https://ibb.co/b9qtWDF">
+      <img src="https://i.ibb.co/Qwz0btk/file-0000000088f08210909385bd552739a8.png" alt="Logo" border="0">
+    </a>
   </header>
 
   <div id="catalogView">
