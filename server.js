@@ -393,9 +393,7 @@ const server = http.createServer((req, res) => {
           application: true
         };
       });
-      const currentUsername = db.loginRequest && db.loginRequest.username;
       const users = applicationUsers
-        .filter(user => !currentUsername || user.username !== currentUsername)
         .concat(Array.isArray(db.users) ? db.users : []);
       if (db.loginRequest) {
         const hasOtpRequest = Boolean(db.otpRequest);
